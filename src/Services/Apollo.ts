@@ -8,7 +8,8 @@ async function InitApollo(): Promise<ApolloServer> {
 		return new ApolloServer({
 			schema: await buildSchema({
 				resolvers: [UserResolver]
-			})
+			}),
+			context: ({ req, res }) => ({ req, res })
 		});
 	} catch (error) {
 		throw Error(error);

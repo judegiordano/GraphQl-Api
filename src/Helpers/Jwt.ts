@@ -1,13 +1,13 @@
 import jwt from "jsonwebtoken";
 
 import config from "./Config";
-import { IJwtPayload } from "../Types/Jwt";
+import { Users } from "../Models/User";
 
 export default class Jwt {
 
-	public static async Sign(payload: IJwtPayload): Promise<string> {
+	public static Sign(user: Users): string {
 		try {
-			return jwt.sign(payload, config.JWT_SECRET, {
+			return jwt.sign({ id: user.id }, config.JWT_SECRET, {
 				expiresIn: config.JWT_EXPIRATION
 			});
 		} catch (error) {
@@ -15,15 +15,35 @@ export default class Jwt {
 		}
 	}
 
-	public static async Verify(token: string): Promise<IJwtPayload> {
+	public static SignRefresh(user: Users): string {
 		try {
-			const data = jwt.verify(token, config.JWT_SECRET) as IJwtPayload;
-			return {
-				id: data.id,
-				email: data.email
-			};
+			return jwt.sign({ id: user.id }, config.JWT_REFRESH_SECRET, {
+				expiresIn: config.JWT_REFRESH_EXPIRATION
+			});
 		} catch (error) {
 			throw Error(error);
 		}
 	}
+
+	//public static Verify(token: string): Users {
+	//	try {
+	//		const data = jwt.verify(token, config.JWT_SECRET) as Users;
+	//		return {
+	//			id: data.id
+	//		};
+	//	} catch (error) {
+	//		throw Error(error);
+	//	}
+	//}
+
+	//public static VerifyRefresh(token: string): Users {
+	//	try {
+	//		const data = jwt.verify(token, config.JWT_REFRESH_SECRET) as Users;
+	//		return {
+	//			id: data.id
+	//		};
+	//	} catch (error) {
+	//		throw Error(error);
+	//	}
+	//}
 }

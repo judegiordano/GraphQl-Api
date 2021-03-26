@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import cluster from "cluster";
 
 import app from "./Services/Server";
 import init from "./Services/Apollo";
@@ -19,4 +20,9 @@ const start = async () => {
 	}
 };
 
-start();
+if (cluster.isMaster) {
+	for (let i = 0; i < config.CORES; i++) {
+		cluster.fork();
+	}
+}
+else start();

@@ -1,8 +1,11 @@
-import { Arg, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
 
 import User from "../../Repositories/UserRepository";
+import Jwt from "../../Helpers/Jwt";
 import { Users } from "../../Models/User";
 import log from "../../Services/Log";
+import { MyContext } from "../Abstract";
+import config from "../../Helpers/Config";
 
 @ObjectType()
 class LoginResponse {
@@ -26,18 +29,20 @@ export class UserResolver {
 	@Mutation(() => LoginResponse)
 	async login(
 		@Arg("email") email: string,
-		@Arg("password") password: string
+		@Arg("password") password: string,
+		@Ctx() { res }: MyContext
 	): Promise<LoginResponse> {
 		const user = await User.Login({
 			email,
 			password
 		});
 
-		log.info(user);
+		res.cookie("jid", Jwt.SignRefresh(user), {
+			httpOnly: true,
+			secure: config.IS_PROD
+		});
 
-		return {
-			accessToken: "blahblah"
-		};
+		return { accessToken: Jwt.Sign(user) };
 	}
 
 	@Mutation(() => Boolean)

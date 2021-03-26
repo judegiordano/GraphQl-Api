@@ -1,5 +1,4 @@
 import { Users } from "../Models/User";
-
 import Password from "../Helpers/Password";
 import { IRegister } from "../Types/User";
 
@@ -23,7 +22,7 @@ export default class UserRepository {
 	public static async Login(req: IRegister): Promise<Users> {
 		try {
 			const exists: Users = await Users.findOne({ where: { email: req.email } });
-			if (exists) throw "email not found";
+			if (!exists) throw "email not found";
 
 			const match = await Password.Compare(req.password, exists.password);
 			if (!match) throw "incorrect password";
