@@ -1,4 +1,4 @@
-# GraphQl / Node / TypeScript Api
+# GraphQl / Node.js / TypeOrm Api
 
 ### Work In Progress
 ---

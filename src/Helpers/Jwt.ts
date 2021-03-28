@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 
 import config from "./Config";
 import { Users } from "../Models/User";
+import { IJwtPayload } from "../Types/Jwt";
 
 export default class Jwt {
 
@@ -25,25 +26,21 @@ export default class Jwt {
 		}
 	}
 
-	//public static Verify(token: string): Users {
-	//	try {
-	//		const data = jwt.verify(token, config.JWT_SECRET) as Users;
-	//		return {
-	//			id: data.id
-	//		};
-	//	} catch (error) {
-	//		throw Error(error);
-	//	}
-	//}
+	public static Verify(token: string): IJwtPayload {
+		try {
+			const data = jwt.verify(token, config.JWT_SECRET) as IJwtPayload;
+			return { id: data.id };
+		} catch (error) {
+			throw Error(error);
+		}
+	}
 
-	//public static VerifyRefresh(token: string): Users {
-	//	try {
-	//		const data = jwt.verify(token, config.JWT_REFRESH_SECRET) as Users;
-	//		return {
-	//			id: data.id
-	//		};
-	//	} catch (error) {
-	//		throw Error(error);
-	//	}
-	//}
+	public static VerifyRefresh(token: string): IJwtPayload {
+		try {
+			const data = jwt.verify(token, config.JWT_REFRESH_SECRET) as IJwtPayload;
+			return { id: data.id };
+		} catch (error) {
+			throw Error(error);
+		}
+	}
 }

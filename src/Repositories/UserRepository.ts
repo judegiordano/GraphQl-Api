@@ -32,4 +32,15 @@ export default class UserRepository {
 			throw Error(error);
 		}
 	}
+
+	public static async FindOne(id: number): Promise<Users> {
+		try {
+			const exists: Users = await Users.findOne({ where: { id } });
+			if (!exists) throw "user not found";
+
+			return exists;
+		} catch (error) {
+			throw Error(error);
+		}
+	}
 }

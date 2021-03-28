@@ -2,6 +2,7 @@ import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 
 import { UserResolver } from "../Types/Resolvers/UserResolver";
+import config from "../Helpers/Config";
 
 async function InitApollo(): Promise<ApolloServer> {
 	try {
@@ -9,7 +10,9 @@ async function InitApollo(): Promise<ApolloServer> {
 			schema: await buildSchema({
 				resolvers: [UserResolver]
 			}),
-			context: ({ req, res }) => ({ req, res })
+			context: ({ req, res }) => ({ req, res }),
+			playground: !config.IS_PROD,
+			introspection: !config.IS_PROD
 		});
 	} catch (error) {
 		throw Error(error);

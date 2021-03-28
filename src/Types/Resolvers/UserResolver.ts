@@ -1,17 +1,13 @@
-import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 
 import User from "../../Repositories/UserRepository";
 import Jwt from "../../Helpers/Jwt";
-import { Users } from "../../Models/User";
 import log from "../../Services/Log";
-import { MyContext } from "../Abstract";
 import config from "../../Helpers/Config";
-
-@ObjectType()
-class LoginResponse {
-	@Field()
-	accessToken: string
-}
+import { LoginResponse } from "./Abstract/Users";
+import { Users } from "../../Models/User";
+import { MyContext } from "../Abstract";
+import { Auth } from "../../Middleware/Auth";
 
 @Resolver()
 export class UserResolver {
@@ -24,6 +20,14 @@ export class UserResolver {
 			log.error(error);
 			return false;
 		}
+	}
+
+	@Query(() => String)
+	@UseMiddleware(Auth)
+	bye(
+		@Ctx() { payload }: MyContext
+	): string {
+		return `user id ${payload.id}`;
 	}
 
 	@Mutation(() => LoginResponse)
