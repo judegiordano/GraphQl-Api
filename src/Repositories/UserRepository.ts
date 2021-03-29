@@ -43,4 +43,17 @@ export default class UserRepository {
 			throw Error(error);
 		}
 	}
+
+	public static async Increment(id: number): Promise<boolean> {
+		try {
+			const exists: Users = await Users.findOne({ where: { id } });
+			if (!exists) throw "user not found";
+
+			exists.tokenVersion += 1;
+			exists.save();
+			return true;
+		} catch (error) {
+			throw Error(error);
+		}
+	}
 }

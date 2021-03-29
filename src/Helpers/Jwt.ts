@@ -18,7 +18,7 @@ export default class Jwt {
 
 	public static SignRefresh(user: Users): string {
 		try {
-			return jwt.sign({ id: user.id }, config.JWT_REFRESH_SECRET, {
+			return jwt.sign({ id: user.id, tokenVersion: user.tokenVersion }, config.JWT_REFRESH_SECRET, {
 				expiresIn: config.JWT_REFRESH_EXPIRATION
 			});
 		} catch (error) {
@@ -29,7 +29,7 @@ export default class Jwt {
 	public static Verify(token: string): IJwtPayload {
 		try {
 			const data = jwt.verify(token, config.JWT_SECRET) as IJwtPayload;
-			return { id: data.id };
+			return { id: data.id, tokenVersion: data.tokenVersion };
 		} catch (error) {
 			throw Error(error);
 		}
@@ -38,7 +38,7 @@ export default class Jwt {
 	public static VerifyRefresh(token: string): IJwtPayload {
 		try {
 			const data = jwt.verify(token, config.JWT_REFRESH_SECRET) as IJwtPayload;
-			return { id: data.id };
+			return { id: data.id, tokenVersion: data.tokenVersion };
 		} catch (error) {
 			throw Error(error);
 		}

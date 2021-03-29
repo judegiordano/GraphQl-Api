@@ -1,4 +1,4 @@
-import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, Ctx, Int, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 
 import User from "../../Repositories/UserRepository";
 import Jwt from "../../Helpers/Jwt";
@@ -28,6 +28,17 @@ export class UserResolver {
 		@Ctx() { payload }: MyContext
 	): string {
 		return `user id ${payload.id}`;
+	}
+
+	@Mutation(() => Boolean)
+	async revokeRefreshToken(
+		@Arg("userId", () => Int) userId: number
+	): Promise<boolean> {
+		try {
+			return await User.Increment(userId);
+		} catch (error) {
+			return false;
+		}
 	}
 
 	@Mutation(() => LoginResponse)

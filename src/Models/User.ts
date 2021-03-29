@@ -14,4 +14,7 @@ export class Users extends BaseEntity {
 
 	@Column("varchar", { name: "password", nullable: false, length: 255 })
 	password: string;
+
+	@Column("int", { name: "tokenVersion", nullable: false, default: 0 })
+	tokenVersion: number;
 }
